@@ -1,0 +1,26 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.14.2, pytest-9.0.2, pluggy-1.6.0
+rootdir: C:\Users\Wajiz.pk\Desktop\Custom Agent Framework Design
+plugins: anyio-4.12.0, langsmith-0.6.4
+collected 1 item
+
+tests\test_core.py F                                                     [100%]
+
+================================== FAILURES ===================================
+________________________ test_agent_basic_run[asyncio] ________________________
+
+    @pytest.mark.anyio
+    async def test_agent_basic_run():
+        llm = MockLLM()
+        tool = CalculatorTool()
+        agent = Agent(llm=llm, tools=[tool])
+    
+        result = await agent.run("What is 2+2?")
+>       assert "The answer is 4" in result["output"]
+                                    ^^^^^^^^^^^^^^^^
+E       KeyError: 'output'
+
+tests\test_core.py:48: KeyError
+=========================== short test summary info ===========================
+FAILED tests/test_core.py::test_agent_basic_run[asyncio] - KeyError: 'output'
+============================== 1 failed in 0.91s ==============================

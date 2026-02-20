@@ -1,0 +1,75 @@
+﻿============================================================
+CUSTOM AGENT FRAMEWORK - ADVANCED DEMO
+============================================================
+py : Traceback (most recent 
+call last):
+At line:1 char:1
++ py demo_advanced.py 2>&1 
+| Out-File -Encoding utf8 
+advanced_demo_outp ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          
+    : NotSpecified: (Trace  
+  back (most recent call    
+ last)::String) [], Remo    
+teException
+    + FullyQualifiedErrorId 
+    : NativeCommandError
+ 
+  File "C:\Users\Wajiz.pk\De
+sktop\Custom Agent 
+Framework 
+Design\demo_advanced.py", 
+line 149, in <module>
+    asyncio.run(demo_advance
+d_features())
+    ~~~~~~~~~~~^^^^^^^^^^^^^
+^^^^^^^^^^^^^
+  File "C:\Users\Wajiz.pk\Ap
+pData\Local\Programs\Python\
+Python314\Lib\asyncio\runner
+s.py", line 204, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Users\Wajiz.pk\Ap
+pData\Local\Programs\Python\
+Python314\Lib\asyncio\runner
+s.py", line 127, in run
+    return self._loop.run_un
+til_complete(task)
+           ~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Wajiz.pk\Ap
+pData\Local\Programs\Python\
+Python314\Lib\asyncio\base_e
+vents.py", line 719, in 
+run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "C:\Users\Wajiz.pk\De
+sktop\Custom Agent 
+Framework 
+Design\demo_advanced.py", 
+line 104, in 
+demo_advanced_features
+    print("\n\U0001f9ee 
+TASK 1: Multi-Step 
+Calculation")
+    ~~~~~^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Wajiz.pk\Ap
+pData\Local\Programs\Python\
+Python314\Lib\encodings\cp12
+52.py", line 19, in encode
+    return codecs.charmap_en
+code(input,self.errors,encod
+ing_table)[0]
+           ~~~~~~~~~~~~~~~~~
+~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^
+UnicodeEncodeError: 
+'charmap' codec can't 
+encode character 
+'\U0001f9ee' in position 2: 
+character maps to 
+<undefined>

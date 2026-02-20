@@ -1,0 +1,8 @@
+openai
+pydantic
+python-dotenv
+aiohttp
+chromadb
+sqlalchemy
+pytest
+pytest-asyncio
