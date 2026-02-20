@@ -1,11 +1,12 @@
 import json
 import time
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Callable
 from llm.provider import LLMProvider, Message
 from tools.base import Tool
 from tools.executor import ToolExecutor
 from memory.short_term import ShortTermMemory
 from state.manager import StateManager, TaskStatus
+from memory.manager import MemoryManager
 
 from core.executor import AgentExecutor
 from core.observability import ExecutionTracer
@@ -25,7 +26,13 @@ class Agent:
         self.state_manager: Optional[StateManager] = None
         self.tracer = ExecutionTracer() if enable_tracing else None
         
-    async def run(self, task: str, pattern: str = "react", **kwargs) -> Dict[str, Any]:
+    async def run(
+        self,
+        task: str,
+        pattern: str = "react",
+        approval_callback: Optional[Callable] = None,
+        **kwargs
+    ) -> Dict[str, Any]:
         """
         Run the agent on a specific task.
         """
@@ -39,7 +46,12 @@ class Agent:
             
         start_time = time.time()
         if pattern == "react":
-            result = await self.executor.execute_react_loop(task, self.state_manager, **kwargs)
+            result = await self.executor.execute_react_loop(
+                task, 
+                self.state_manager, 
+                approval_callback=approval_callback,
+                **kwargs
+            )
         else:
             result = {"error": f"Pattern {pattern} not implemented"}
             

@@ -1,10 +1,11 @@
 import time
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Callable
 from llm.provider import LLMProvider, Message
 from llm.prompt_builder import PromptBuilder
 from llm.parser import ResponseParser, ReactOutput
 from tools.base import Tool, ToolResult
 from tools.executor import ToolExecutor
+from core.robustness import ErrorHandler
 from state.manager import StateManager, TaskStatus
 
 from core.reflector import Reflector
@@ -30,7 +31,8 @@ class AgentExecutor:
         task: str,
         state_manager: StateManager,
         max_iterations: int = 10,
-        use_planning: bool = False
+        use_planning: bool = False,
+        approval_callback: Optional[Callable[[str, Dict], bool]] = None
     ) -> Dict[str, Any]:
         """
         Main loop implementation with optional adaptive planning.
@@ -45,10 +47,18 @@ class AgentExecutor:
             scratchpad += f"\nCurrent Plan:\n" + "\n".join([f"- {s.task}" for s in current_plan.steps]) + "\n"
         
         for i in range(max_iterations):
-            # Build prompt (includes scratchpad which now may contain plan)
+            # Build prompt
             prompt = self.prompt_builder.build_react_prompt(task, list(self.tools.values()), scratchpad)
             
-            response = await self.llm.generate([Message(role="user", content=prompt)])
+            # GENERATE WITH RETRY
+            success, response = await ErrorHandler.retry_with_backoff(
+                self.llm.generate,
+                messages=[Message(role="user", content=prompt)]
+            )
+            
+            if not success:
+                 state_manager.update_status(TaskStatus.FAILED)
+                 return {"error": f"LLM Generation failed: {response}"}
             
             # PARSE
             parsed: ReactOutput = self.parser.parse_react_response(response.content)
@@ -82,8 +92,24 @@ class AgentExecutor:
                 if parsed.action not in self.tools:
                     observation = f"Error: Tool '{parsed.action}' not found."
                 else:
-                    tool_result = await self.tool_executor.execute(self.tools[parsed.action], parsed.action_input or {})
-                    observation = str(tool_result.output) if tool_result.success else f"Error: {tool_result.error}"
+                    tool = self.tools[parsed.action]
+                    
+                    # HITL: Request approval if needed
+                    approved = True
+                    if tool.requires_approval:
+                        if approval_callback:
+                            state_manager.add_history("system", f"Requesting approval for tool: {parsed.action}")
+                            approved = await approval_callback(parsed.action, parsed.action_input or {})
+                        else:
+                            # If no callback provided but approval required, skip/warn
+                            approved = False
+                            observation = f"Error: Tool '{parsed.action}' requires human approval but no approval mechanism is configured."
+                    
+                    if approved:
+                        tool_result = await self.tool_executor.execute(tool, parsed.action_input or {})
+                        observation = str(tool_result.output) if tool_result.success else f"Error: {tool_result.error}"
+                    elif not observation: # If manually denied
+                        observation = f"User denied execution of tool '{parsed.action}'."
                 
                 # OBSERVE
                 state_manager.add_history("observation", observation)
