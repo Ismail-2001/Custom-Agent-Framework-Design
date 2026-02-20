@@ -53,8 +53,14 @@ Memory in Nexus is not just a chat history; it's a tiered architecture:
 ### 🛡️ State Sovereignty & Checkpointing
 The `StateManager` treats every task as a stateful session:
 - **Pydantic Guarding**: The `AgentState` ensures all history and status transitions are type-safe.
-- **Atomic Checkpoints**: Save the entire agent universe (memory, history, iteration count) to disk mid-task.
-- **Crash Recovery**: Restore an agent from a `checkpoint_id` to resume execution exactly where it left off.
+- **Atomic Checkpoints**: Save the entire agent universe mid-task.
+- **Crash Recovery**: Restore from `checkpoint_id`.
+
+### 🔌 Ecosystem Interoperability
+Nexus is designed to be a bridge, not an island. Built-in adapters allow for:
+- **LangChain Bridge**: Bi-directional tool conversion. Use Nexus tools in LangChain graphs or vice-versa.
+- **LlamaIndex Data-Loop**: Integrate RAG-capable document stores into the autonomous ReAct cycle.
+- **Provider Agnostic**: Switch between OpenAI, DeepSeek, and Anthropic with 0 logic changes.
 
 ---
 
@@ -160,18 +166,17 @@ asyncio.run(run_lab())
 
 ## 🧪 The Lab & Roadmap
 
-### ✅ Phase 1-6: Core Framework & Cognitive Depth (Completed)
+### ✅ Phase 1-7: Full Framework & Ecosystem Sync (Completed)
 - [x] **State Machine Core**: Deterministic status management (Pending → Running → Completed).
 - [x] **Episodic Replay**: SQLite storage of full task sequences.
 - [x] **Self-Reflection Loop**: Autonomous critique node that monitors execution quality.
 - [x] **Adaptive Replanning**: Logic to adjust strategy when progress stalls.
+- [x] **LangChain/LlamaIndex Adapters**: Native bi-directional tool & memory bridges.
 - [x] **Tool Guardrail System**: JSON Schema validation for all agent actions.
 - [x] **Structured Trace Logger**: Time-stamped, categorized event logging.
 
-### 🔨 Phase 7: Scaling & Integrations (Next)
+### 🔨 Phase 8: Scaling & Advanced Autonomy (Next)
 - [ ] **Multi-Agent Handover**: Logic for one agent to delegate to another.
-- [ ] **Adaptive Rate Limiting**: Intelligent backoff logic for LLM APIs.
-- [ ] **Graph-Based Planning**: Moving from a linear list to a task dependency graph.
 - [ ] **OTEL Integration**: Full OpenTelemetry support for cloud-native tracing.
 - [ ] **Distributed Memory**: Redis-backed memory for cluster deployments.
 - [ ] **Human-in-the-loop (HITL)**: Tool calls that wait for human approval via state suspension.

@@ -146,14 +146,10 @@ Running → Checkpoint → [SQLite/JSON]
    - Batched tool execution
    - Performance profiling
 
-#### Phase 7: Integrations (1 week)
-1. **LangChain Adapter**
-   - Bi-directional tool conversion
-   - Chain integration
-
-2. **LlamaIndex Adapter**
-   - RAG capability
-   - Document store integration
+#### Phase 7: Integrations (Week 7-8)
+- ✅ **LangChain Adapter** (Bi-directional tool conversion)
+- ✅ **LlamaIndex Adapter** (RAG/Document store bridge)
+- ⏳ Additional LLM Providers (Claude/Gemini)
 
 3. **Additional Providers**
    - Anthropic Claude
