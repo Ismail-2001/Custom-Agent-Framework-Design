@@ -10,11 +10,24 @@ class OpenAIProvider(LLMProvider):
         self,
         model: str = "gpt-4o-mini",
         api_key: Optional[str] = None,
+        base_url: Optional[str] = None,
         organization: Optional[str] = None
     ):
         self.model = model
-        # api_key will be read from environment if not provided
-        self.client = AsyncOpenAI(api_key=api_key or os.environ.get("OPENAI_API_KEY"), organization=organization)
+        
+        # Smart detection for DeepSeek or other OpenAI-compatible providers
+        final_api_key = api_key or os.environ.get("OPENAI_API_KEY") or os.environ.get("DEEPSEEK_API_KEY")
+        final_base_url = base_url or os.environ.get("OPENAI_BASE_URL")
+        
+        if not final_base_url and os.environ.get("DEEPSEEK_API_KEY"):
+             # If using DeepSeek key and no base_url specified, default to DeepSeek API
+             final_base_url = "https://api.deepseek.com"
+
+        self.client = AsyncOpenAI(
+            api_key=final_api_key,
+            base_url=final_base_url,
+            organization=organization
+        )
         
     async def generate(
         self,
