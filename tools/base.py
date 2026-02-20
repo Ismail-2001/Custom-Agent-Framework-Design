@@ -18,6 +18,7 @@ class Tool(BaseModel):
     name: str
     description: str
     parameters: Dict[str, Any]  # JSON Schema
+    requires_approval: bool = False # For Human-in-the-loop
     
     async def execute(self, **kwargs) -> ToolResult:
         """Execute tool with given parameters. Should be overridden by subclasses."""
