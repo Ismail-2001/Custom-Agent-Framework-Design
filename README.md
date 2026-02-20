@@ -160,18 +160,18 @@ asyncio.run(run_lab())
 
 ## 🧪 The Lab & Roadmap
 
-### ✅ Phase 1-5: Core Framework (Completed)
+### ✅ Phase 1-6: Core Framework & Cognitive Depth (Completed)
 - [x] **State Machine Core**: Deterministic status management (Pending → Running → Completed).
 - [x] **Episodic Replay**: SQLite storage of full task sequences.
+- [x] **Self-Reflection Loop**: Autonomous critique node that monitors execution quality.
+- [x] **Adaptive Replanning**: Logic to adjust strategy when progress stalls.
 - [x] **Tool Guardrail System**: JSON Schema validation for all agent actions.
 - [x] **Structured Trace Logger**: Time-stamped, categorized event logging.
 
-### 🔨 Phase 6: Cognitive Depth (Next)
+### 🔨 Phase 7: Scaling & Integrations (Next)
 - [ ] **Multi-Agent Handover**: Logic for one agent to delegate to another.
 - [ ] **Adaptive Rate Limiting**: Intelligent backoff logic for LLM APIs.
 - [ ] **Graph-Based Planning**: Moving from a linear list to a task dependency graph.
-
-### 🔭 Phase 7: Enterprise Scaling
 - [ ] **OTEL Integration**: Full OpenTelemetry support for cloud-native tracing.
 - [ ] **Distributed Memory**: Redis-backed memory for cluster deployments.
 - [ ] **Human-in-the-loop (HITL)**: Tool calls that wait for human approval via state suspension.
